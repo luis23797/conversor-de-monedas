@@ -15,12 +15,6 @@ public class Moneda {
     public Moneda(String nombre,String json,ArrayList<String> claves){
         this.nombre = nombre;
         cambios = new HashMap<>();
-//        cambios.put("ARS",rates.conversion_rates().ARS());
-//        cambios.put("BOB",rates.conversion_rates().BOB());
-//        cambios.put("BRL",rates.conversion_rates().BRL());
-//        cambios.put("CLP",rates.conversion_rates().CLP());
-//        cambios.put("COP",rates.conversion_rates().COP());
-//        cambios.put("USD",rates.conversion_rates().USD());
         try{
             JsonObject obj = JsonParser.parseString(json).getAsJsonObject().get("conversion_rates").getAsJsonObject();
             for (String clave:claves){

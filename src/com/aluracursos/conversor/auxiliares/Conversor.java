@@ -3,7 +3,6 @@ package com.aluracursos.conversor.auxiliares;
 import com.aluracursos.conversor.modelos.Moneda;
 import com.aluracursos.conversor.modelos.Reporte;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Conversor {

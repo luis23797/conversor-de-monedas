@@ -2,7 +2,6 @@ package com.aluracursos.conversor.main;
 
 import com.aluracursos.conversor.auxiliares.Conversor;
 import com.aluracursos.conversor.modelos.Moneda;
-import com.aluracursos.conversor.modelos.Reporte;
 
 import java.util.Scanner;
 
