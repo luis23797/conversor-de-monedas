@@ -17,8 +17,8 @@ import java.util.Scanner;
 public class ManejadorJson {
     private Gson gson;
     private String directorio;
-    private String directorioReporte;
     public ManejadorJson(String nombreDelArchivo){
+        // Se instancia el gson para la serializacion y deserializacion
         this.directorio = nombreDelArchivo;
         gson = new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE)
@@ -32,6 +32,7 @@ public class ManejadorJson {
         File archivo = new File(directorio);
         String aux= "";
         try{
+            // Se comprueba la existencia del archivo
             if(archivo.exists()){
                     Scanner scanner = new Scanner(archivo);
                     while (scanner.hasNextLine()){
@@ -40,6 +41,8 @@ public class ManejadorJson {
                     try{
                         clavesDelJson = gson.fromJson(aux,ArrayList.class);
                         List<String> listaClavesIniciales = Arrays.asList(Constantes.monedasIniciales);
+                        // Se verifica que la clave a escribir no este presente en las claves estaticas o en las del archivo
+                        // Despues se agrega la nueva clave de moneda en un arraylist que contiene las claves agregadas anteriormente
                         if(listaClavesIniciales.contains(clave) || clavesDelJson.contains(clave)){
                             System.out.println("Moneda ya existente");
                             return;
@@ -49,11 +52,13 @@ public class ManejadorJson {
                         clavesDelJson = new ArrayList<>();
                         clavesDelJson.add(clave);
                     }
+                    // Finalmente se serializa el arraylist para escribirlo en el archivo
                     FileWriter escrituraNueva = new FileWriter(directorio);
                     escrituraNueva.write(gson.toJson(clavesDelJson));
                     escrituraNueva.close();
                     System.out.println("Moneda agregada Exitosamente");
             }else{
+                // En caso de que no exista el archivo se crea uno y se agrega un arraylist que contiene solamente la clave nueva
                 FileWriter escritura = new FileWriter(directorio);
                 clavesDelJson = new ArrayList<>();
                 clavesDelJson.add(clave);
@@ -68,6 +73,7 @@ public class ManejadorJson {
 
 
     public ArrayList<String> obtenerClaves(){
+        // Se crea un ArrayList para almacenar las claves
         ArrayList<String> clavesDelJson = new ArrayList<>();
         File archivo = new File(directorio);
         String aux= "";
@@ -78,6 +84,7 @@ public class ManejadorJson {
                     aux += scanner.nextLine();
                 }
                 try{
+                    // Despues de leer el archivo se convierte en un ArrayList de Strings que contenga las claves
                     clavesDelJson = gson.fromJson(aux,ArrayList.class);
                     if (clavesDelJson==null) return new ArrayList<>();
                 }catch (NullPointerException | JsonSyntaxException e){
@@ -90,6 +97,7 @@ public class ManejadorJson {
         }
     }
     public void escribirReporte(Reporte reporte) {
+        //Similar a la escritura de claves solo que se escribe un Reporte
         ArrayList<Reporte> reportes;
         File archivo = new File(Constantes.DirectorioReporteJson);
         String aux= "";
@@ -124,6 +132,7 @@ public class ManejadorJson {
     }
 
     public ArrayList<Reporte> obtenerReportes(){
+        // Similar a la lectura de las llaves solo que se utilizan los generics para leer un arraylist de Reportes
         ArrayList<Reporte> reportes = new ArrayList<>();
         File archivo = new File(Constantes.DirectorioReporteJson);
         String aux= "";

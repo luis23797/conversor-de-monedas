@@ -11,6 +11,7 @@ public class Conversor {
     private ManejadorJson manejadorJson;
     private ApiConsumidor consumidor;
     public Conversor(){
+        //Instancias de la clase que consulta la API y la que escribe archivos y hace serializacion
         consumidor = new ApiConsumidor(Constantes.ApiKey);
         manejadorJson = new ManejadorJson(Constantes.DirectorioArchivoJson);
         claves = new ArrayList<>();
@@ -59,6 +60,7 @@ public class Conversor {
     }
 
     private void inicializarClaves(){
+        // Se introducen todas las claves de moneda, tanto las estaticas como las del archivo de claves
         for(String clave:Constantes.monedasIniciales){
             claves.add(clave.toUpperCase());
         }
@@ -70,17 +72,20 @@ public class Conversor {
     }
 
     private Moneda obtenerMoneda(String clave){
+        // Consulta la clave mandada como parametro a la APi
         String json = consumidor.consultarMoneda(clave);
         return new Moneda(clave.toUpperCase(),json,claves);
     }
     private void inicializarMonedas(){
+        // Crea monedas por cada una de las claves existentes en el arraylist de claves y las agrega a un arraylist
         Moneda moneda = null;
         for (String clave : claves) {
             moneda = obtenerMoneda(clave);
-            if(moneda.getHashSize()>0) monedas.add(moneda);
+            if(moneda.getHashSize()>0) monedas.add(moneda); //En caso de que la moneda no tenga claves se omite
         }
     }
     public Moneda buscarMoneda(String clave){
+        // Busca una moneda especifica almacenada en el arraylist
         Moneda resultado = null;
         for(Moneda moneda:monedas){
             if(moneda.getNombre().equals(clave)){
@@ -91,8 +96,10 @@ public class Conversor {
         return resultado;
     }
     public String ObtenerClave(String opc){
+        // Busca una clave de moneda dentro de la lista de claves
         String clave = "";
         try {
+            // Verifica si el numero proporcionado corresponde a la posicion de una clave disponible
             int aux = Integer.parseInt(opc) - 1;
             if(aux<=claves.size()-1 && aux>=0){
                 clave = claves.get(aux);
@@ -105,25 +112,30 @@ public class Conversor {
     public void agregarMoneda(String clave){
         clave = clave.toLowerCase();
         Moneda moneda = obtenerMoneda(clave);
+        // Verifica si la clave proporcionada tiene una respuesta valida de la API
         if(moneda.getHashSize()<=0){
             System.out.println("La clave ingresada no es valida");
             return;
         }
+        //Agrega la clave proporcionada a la misma moneda y despues se agrega a las demas monedas existentes
         clave = clave.toUpperCase();
         moneda.actualizarHash(clave,1);
         for (Moneda actual:monedas){
             actual.actualizarHash(moneda);
         }
+        // Se agrega la nueva clave y se agrega la moneda a la coleccion de monedas y se escribe la moneda en el archivo
         claves.add(clave);
         monedas.add(moneda);
         manejadorJson.escribirJson(clave);
 
     }
     public void escribirReporte(String claveOrigen, String claveDestino, double cantidad, double resultado){
+        //Crea un reporte que sera escrito en el archivo utilizando los datos de la conversion
         Reporte reporte = new Reporte(claveOrigen,claveDestino,cantidad,resultado);
         manejadorJson.escribirReporte(reporte);
     }
     public void mostrarReportes(){
+        // Obtiene los reportes existentes en el archivo de reportes y los imprime
         ArrayList<Reporte> reportes = manejadorJson.obtenerReportes();
         if(reportes.isEmpty()){
             System.out.println("No hay reportes");

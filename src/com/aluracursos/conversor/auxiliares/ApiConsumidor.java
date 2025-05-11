@@ -16,6 +16,7 @@ public class ApiConsumidor {
         url = "https://v6.exchangerate-api.com/v6/"+apiKey+"/";
     }
     public String consultarMoneda(String moneda){
+        // Se crea la url de consulta a partir de la url de la API y la APIkey y se manda la peticion
         String consulta =url + "latest/" + moneda;
 
         client = HttpClient.newHttpClient();

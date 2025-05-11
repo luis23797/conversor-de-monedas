@@ -37,6 +37,7 @@ public class Moneda {
     public int getHashSize(){
         return  this.cambios.size();
     }
+
     public void actualizarHash(Moneda moneda){
         cambios.put(moneda.getNombre().toUpperCase(),moneda.obtenerCambio(nombre.toUpperCase(),1));
     }
